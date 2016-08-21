@@ -13,29 +13,29 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppCompatActivityObservable extends AppCompatActivity {
-    private List<AppCompatActivityObserver> observers = new ArrayList<>();
+public class AppCompatActivityObservable<T extends AppCompatActivityObserver> extends AppCompatActivity {
+    protected List<T> observers = new ArrayList<>();
 
-    public void addObserver(AppCompatActivityObserver observer) {
+    public void addObserver(T observer) {
         if (observers.contains(observer)) return;
         observers.add(observer);
         observer.setActivityDelegate(this);
     }
 
-    public void addObservers(AppCompatActivityObserver... observers) {
-        for (AppCompatActivityObserver observer: observers) {
+    public void addObservers(T... observers) {
+        for (T observer: observers) {
             if (this.observers.contains(observer)) continue;
             this.observers.add(observer);
             observer.setActivityDelegate(this);
         }
     }
 
-    public void removeObserver(AppCompatActivityObserver observer) {
+    public void removeObserver(T observer) {
         observers.remove(observer);
     }
 
-    public void removeObservers(AppCompatActivityObserver... observers) {
-        for (AppCompatActivityObserver observer: observers) {
+    public void removeObservers(T... observers) {
+        for (T observer: observers) {
             this.observers.remove(observer);
         }
     }
@@ -43,7 +43,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onCreate(savedInstanceState);
         }
     }
@@ -51,7 +51,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onPostCreate(savedInstanceState);
         }
     }
@@ -59,7 +59,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onConfigurationChanged(newConfig);
         }
     }
@@ -67,7 +67,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onPostResume();
         }
     }
@@ -75,7 +75,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onStart();
         }
     }
@@ -83,7 +83,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onStop();
         }
     }
@@ -91,7 +91,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onDestroy();
         }
     }
@@ -99,7 +99,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     protected void onTitleChanged(CharSequence title, int color) {
         super.onTitleChanged(title, color);
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onTitleChanged(title, color);
         }
     }
@@ -107,7 +107,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     public void onSupportActionModeStarted(@NonNull ActionMode mode) {
         super.onSupportActionModeStarted(mode);
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onSupportActionModeStarted(mode);
         }
     }
@@ -115,7 +115,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     public void onSupportActionModeFinished(@NonNull ActionMode mode) {
         super.onSupportActionModeFinished(mode);
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onSupportActionModeFinished(mode);
         }
     }
@@ -124,7 +124,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     public ActionMode onWindowStartingSupportActionMode(@NonNull ActionMode.Callback callback) {
         ActionMode actionMode = null;
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             ActionMode temporalActionMode = observer.onWindowStartingSupportActionMode(callback);
             if (temporalActionMode != null) actionMode = temporalActionMode;
         }
@@ -135,7 +135,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
         super.onCreateSupportNavigateUpTaskStack(builder);
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onCreateSupportNavigateUpTaskStack(builder);
         }
     }
@@ -143,7 +143,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     public void onPrepareSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
         super.onPrepareSupportNavigateUpTaskStack(builder);
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onPrepareSupportNavigateUpTaskStack(builder);
         }
     }
@@ -151,7 +151,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         boolean isAnyReturnTrue = false;
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             isAnyReturnTrue = observer.onSupportNavigateUp() || isAnyReturnTrue;
         }
         return super.onSupportNavigateUp() || isAnyReturnTrue;
@@ -160,7 +160,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     public void onContentChanged() {
         super.onContentChanged();
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onContentChanged();
         }
     }
@@ -168,7 +168,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
         boolean isAnyReturnTrue = false;
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             isAnyReturnTrue = observer.onMenuOpened(featureId, menu) || isAnyReturnTrue;
         }
         return super.onMenuOpened(featureId, menu) || isAnyReturnTrue;
@@ -177,7 +177,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     public void onPanelClosed(int featureId, Menu menu) {
         super.onPanelClosed(featureId, menu);
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onPanelClosed(featureId, menu);
         }
     }
@@ -185,14 +185,14 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onSaveInstanceState(outState);
         }
     }
 
     @Override
     public void onBackPressed() {
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onBackPressed();
         }
     }
@@ -200,7 +200,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             observer.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
@@ -208,7 +208,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean isAnyReturnTrue = false;
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             isAnyReturnTrue = observer.onCreateOptionsMenu(menu) || isAnyReturnTrue;
         }
         return super.onCreateOptionsMenu(menu) || isAnyReturnTrue;
@@ -217,7 +217,7 @@ public class AppCompatActivityObservable extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean isAnyReturnTrue = false;
-        for (AppCompatActivityObserver observer: observers) {
+        for (T observer: observers) {
             isAnyReturnTrue = observer.onOptionsItemSelected(item) || isAnyReturnTrue;
         }
         return super.onOptionsItemSelected(item) || isAnyReturnTrue;

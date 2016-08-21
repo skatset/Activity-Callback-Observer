@@ -1,6 +1,7 @@
 package com.skatset.activitycallbackobserver;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,5 +63,13 @@ public class AppCompatActivityObservable extends AppCompatActivity {
             isAnyReturnTrue = observer.onOptionsItemSelected(item) || isAnyReturnTrue;
         }
         return isAnyReturnTrue;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        for (AppCompatActivityObserver observer: observers) {
+            observer.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }

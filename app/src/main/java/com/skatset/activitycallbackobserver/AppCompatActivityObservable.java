@@ -9,12 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppCompatActivityObservable extends AppCompatActivity {
-    private final int contentViewLayoutId;
     private List<AppCompatActivityObserver> observers = new ArrayList<>();
-
-    public AppCompatActivityObservable(int contentViewLayoutId) {
-        this.contentViewLayoutId = contentViewLayoutId;
-    }
 
     public void addObserver(AppCompatActivityObserver observer) {
         if (observers.contains(observer)) return;
@@ -42,7 +37,6 @@ public class AppCompatActivityObservable extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(contentViewLayoutId);
         for (AppCompatActivityObserver observer: observers) {
             observer.onCreate(savedInstanceState);
         }

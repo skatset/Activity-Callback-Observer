@@ -13,29 +13,29 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppCompatActivityObservable<T extends AppCompatActivityObserver> extends AppCompatActivity {
-    protected List<T> observers = new ArrayList<>();
+public class AppCompatActivityObservable extends AppCompatActivity {
+    protected List<AppCompatActivityObserver> observers = new ArrayList<>();
 
-    public void addObserver(T observer) {
+    public void addObserver(AppCompatActivityObserver observer) {
         if (observers.contains(observer)) return;
         observers.add(observer);
         observer.setActivityDelegate(this);
     }
 
-    public void addObservers(T... observers) {
-        for (T observer: observers) {
+    public void addObservers(AppCompatActivityObserver... observers) {
+        for (AppCompatActivityObserver observer: observers) {
             if (this.observers.contains(observer)) continue;
             this.observers.add(observer);
             observer.setActivityDelegate(this);
         }
     }
 
-    public void removeObserver(T observer) {
+    public void removeObserver(AppCompatActivityObserver observer) {
         observers.remove(observer);
     }
 
-    public void removeObservers(T... observers) {
-        for (T observer: observers) {
+    public void removeObservers(AppCompatActivityObserver... observers) {
+        for (AppCompatActivityObserver observer: observers) {
             this.observers.remove(observer);
         }
     }
@@ -43,7 +43,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onCreate(savedInstanceState);
         }
     }
@@ -51,7 +51,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onPostCreate(savedInstanceState);
         }
     }
@@ -59,7 +59,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onConfigurationChanged(newConfig);
         }
     }
@@ -67,7 +67,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onPostResume();
         }
     }
@@ -75,7 +75,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     protected void onStart() {
         super.onStart();
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onStart();
         }
     }
@@ -83,7 +83,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     protected void onStop() {
         super.onStop();
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onStop();
         }
     }
@@ -91,7 +91,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onDestroy();
         }
     }
@@ -99,7 +99,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     protected void onTitleChanged(CharSequence title, int color) {
         super.onTitleChanged(title, color);
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onTitleChanged(title, color);
         }
     }
@@ -107,7 +107,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     public void onSupportActionModeStarted(@NonNull ActionMode mode) {
         super.onSupportActionModeStarted(mode);
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onSupportActionModeStarted(mode);
         }
     }
@@ -115,7 +115,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     public void onSupportActionModeFinished(@NonNull ActionMode mode) {
         super.onSupportActionModeFinished(mode);
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onSupportActionModeFinished(mode);
         }
     }
@@ -124,7 +124,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     public ActionMode onWindowStartingSupportActionMode(@NonNull ActionMode.Callback callback) {
         ActionMode actionMode = null;
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             ActionMode temporalActionMode = observer.onWindowStartingSupportActionMode(callback);
             if (temporalActionMode != null) actionMode = temporalActionMode;
         }
@@ -135,7 +135,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     public void onCreateSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
         super.onCreateSupportNavigateUpTaskStack(builder);
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onCreateSupportNavigateUpTaskStack(builder);
         }
     }
@@ -143,7 +143,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     public void onPrepareSupportNavigateUpTaskStack(@NonNull TaskStackBuilder builder) {
         super.onPrepareSupportNavigateUpTaskStack(builder);
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onPrepareSupportNavigateUpTaskStack(builder);
         }
     }
@@ -151,7 +151,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     public boolean onSupportNavigateUp() {
         boolean isAnyReturnTrue = false;
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             isAnyReturnTrue = observer.onSupportNavigateUp() || isAnyReturnTrue;
         }
         return super.onSupportNavigateUp() || isAnyReturnTrue;
@@ -160,7 +160,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     public void onContentChanged() {
         super.onContentChanged();
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onContentChanged();
         }
     }
@@ -168,7 +168,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
         boolean isAnyReturnTrue = false;
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             isAnyReturnTrue = observer.onMenuOpened(featureId, menu) || isAnyReturnTrue;
         }
         return super.onMenuOpened(featureId, menu) || isAnyReturnTrue;
@@ -177,7 +177,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     public void onPanelClosed(int featureId, Menu menu) {
         super.onPanelClosed(featureId, menu);
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onPanelClosed(featureId, menu);
         }
     }
@@ -185,22 +185,29 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onSaveInstanceState(outState);
         }
     }
 
+    /**
+     * Be careful - this method has different behavior rather then other methods in this class:
+     * other methods call super class method in aby case; this method call super class method
+     * only if no observer handle back press.
+     */
     @Override
     public void onBackPressed() {
-        for (T observer: observers) {
-            observer.onBackPressed();
+        boolean isAnyReturnTrue = false;
+        for (AppCompatActivityObserver observer: observers) {
+            isAnyReturnTrue = observer.onBackPressed()|| isAnyReturnTrue;
         }
+        if (!isAnyReturnTrue) super.onBackPressed();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             observer.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
@@ -208,7 +215,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         boolean isAnyReturnTrue = false;
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             isAnyReturnTrue = observer.onCreateOptionsMenu(menu) || isAnyReturnTrue;
         }
         return super.onCreateOptionsMenu(menu) || isAnyReturnTrue;
@@ -217,7 +224,7 @@ public class AppCompatActivityObservable<T extends AppCompatActivityObserver> ex
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean isAnyReturnTrue = false;
-        for (T observer: observers) {
+        for (AppCompatActivityObserver observer: observers) {
             isAnyReturnTrue = observer.onOptionsItemSelected(item) || isAnyReturnTrue;
         }
         return super.onOptionsItemSelected(item) || isAnyReturnTrue;

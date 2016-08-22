@@ -75,7 +75,8 @@ public class AppCompatActivityObserver {
     protected void onSaveInstanceState(Bundle outState) {
     }
 
-    protected void onBackPressed() {
+    protected boolean onBackPressed() {
+        return false;
     }
 
     protected void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,

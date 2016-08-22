@@ -120,16 +120,23 @@ public class AppCompatActivityObservable extends AppCompatActivity {
         }
     }
 
+    /**
+     * Be careful - this method has different behavior rather then other methods in this class:
+     * other methods call super class method in any case (and before observers);
+     * this method call super class method only if no observer return ActionMode instance.
+     *
+     * Also this method will ask observers to return ActionMode instance till first observers
+     * return it. Other ones know nothing about windows starting support action mode event
+     * (its onWindowStartingSupportActionMode() will not be called).
+     */
     @Nullable
     @Override
     public ActionMode onWindowStartingSupportActionMode(@NonNull ActionMode.Callback callback) {
-        ActionMode actionMode = null;
         for (AppCompatActivityObserver observer: observers) {
-            ActionMode temporalActionMode = observer.onWindowStartingSupportActionMode(callback);
-            if (temporalActionMode != null) actionMode = temporalActionMode;
+            ActionMode actionMode = observer.onWindowStartingSupportActionMode(callback);
+            if (actionMode != null) return actionMode;
         }
-        ActionMode temporalActionMode = super.onWindowStartingSupportActionMode(callback);
-        return temporalActionMode == null ? actionMode : temporalActionMode;
+        return super.onWindowStartingSupportActionMode(callback);
     }
 
     @Override
@@ -150,11 +157,11 @@ public class AppCompatActivityObservable extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        boolean isAnyReturnTrue = false;
+        boolean isAnyReturnTrue = super.onSupportNavigateUp();
         for (AppCompatActivityObserver observer: observers) {
             isAnyReturnTrue = observer.onSupportNavigateUp() || isAnyReturnTrue;
         }
-        return super.onSupportNavigateUp() || isAnyReturnTrue;
+        return isAnyReturnTrue;
     }
 
     @Override
@@ -167,11 +174,11 @@ public class AppCompatActivityObservable extends AppCompatActivity {
 
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
-        boolean isAnyReturnTrue = false;
+        boolean isAnyReturnTrue = super.onMenuOpened(featureId, menu);
         for (AppCompatActivityObserver observer: observers) {
             isAnyReturnTrue = observer.onMenuOpened(featureId, menu) || isAnyReturnTrue;
         }
-        return super.onMenuOpened(featureId, menu) || isAnyReturnTrue;
+        return isAnyReturnTrue;
     }
 
     @Override
@@ -192,16 +199,20 @@ public class AppCompatActivityObservable extends AppCompatActivity {
 
     /**
      * Be careful - this method has different behavior rather then other methods in this class:
-     * other methods call super class method in aby case; this method call super class method
-     * only if no observer handle back press.
+     * other methods call super class method in any case (and before observers);
+     * this method call super class method only if no observer handle back press.
+     *
+     * Also this method will ask observers to handle back press till first observers handle it.
+     * Other ones know nothing about back press (its onBackPressed() will not be called).
      */
     @Override
     public void onBackPressed() {
-        boolean isAnyReturnTrue = false;
         for (AppCompatActivityObserver observer: observers) {
-            isAnyReturnTrue = observer.onBackPressed()|| isAnyReturnTrue;
+            if (observer.onBackPressed()) {
+                return;
+            }
         }
-        if (!isAnyReturnTrue) super.onBackPressed();
+        super.onBackPressed();
     }
 
     @Override
@@ -214,19 +225,19 @@ public class AppCompatActivityObservable extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        boolean isAnyReturnTrue = false;
+        boolean isAnyReturnTrue = super.onCreateOptionsMenu(menu);
         for (AppCompatActivityObserver observer: observers) {
             isAnyReturnTrue = observer.onCreateOptionsMenu(menu) || isAnyReturnTrue;
         }
-        return super.onCreateOptionsMenu(menu) || isAnyReturnTrue;
+        return isAnyReturnTrue;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        boolean isAnyReturnTrue = false;
+        boolean isAnyReturnTrue = super.onOptionsItemSelected(item);
         for (AppCompatActivityObserver observer: observers) {
             isAnyReturnTrue = observer.onOptionsItemSelected(item) || isAnyReturnTrue;
         }
-        return super.onOptionsItemSelected(item) || isAnyReturnTrue;
+        return isAnyReturnTrue;
     }
 }
